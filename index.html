@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Komunita — čekací listina | Alexandra Schneider Hrouzková</title>
+<meta name="description" content="Komunita pro všechny, kdo se chtějí vymanit z přežívání a začít žít autenticky. Zapiš se na čekací listinu.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#232324; --ink2:#2C2C2C; --gold:#C8A96E; --gold-hi:#E2C994; --gold-dim:rgba(200,169,110,.5); --gold-glow:rgba(200,169,110,.16);
+  --ivory:#EFEDE8; --mut:rgba(239,237,232,.55); --line:rgba(239,237,232,.1);
+  --serif:'Instrument Serif',Georgia,serif; --sans:'Instrument Sans',-apple-system,sans-serif; --script:'Caveat',cursive;
+  --ease:cubic-bezier(.22,.68,.14,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:linear-gradient(180deg,var(--ink) 0%,var(--ink2) 60%,#1d1d1e 100%);color:var(--ivory);font-family:var(--sans);font-size:17px;line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::selection{background:var(--gold);color:var(--ink)}
+a{color:inherit;text-decoration:none}
+
+.grain{position:fixed;inset:-50%;width:200%;height:200%;pointer-events:none;z-index:30;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain 9s steps(10) infinite}
+@keyframes grain{0%,100%{transform:translate(0,0)}25%{transform:translate(-2%,2%)}50%{transform:translate(2%,-2%)}75%{transform:translate(-2%,-1%)}}
+.orb{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0}
+.orb.a{width:46vw;height:46vw;top:-16vw;right:-14vw;background:radial-gradient(circle,rgba(200,169,110,.14),transparent 68%);animation:drift 28s var(--ease) infinite alternate}
+.orb.b{width:36vw;height:36vw;bottom:0;left:-16vw;background:radial-gradient(circle,rgba(150,125,80,.1),transparent 70%);animation:drift 36s var(--ease) infinite alternate-reverse}
+@keyframes drift{to{transform:translate(4vw,3vw) scale(1.12)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.wrap{max-width:1080px;margin:0 auto;padding:0 clamp(20px,4vw,44px);position:relative;z-index:2}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.script{font-family:var(--script);color:var(--gold);font-size:clamp(26px,3.4vw,40px);transform:rotate(-2deg);display:inline-block}
+.display{font-family:var(--serif);font-weight:400;letter-spacing:-.015em;line-height:1.06}
+.display em{font-style:italic;color:var(--gold)}
+.eyebrow{font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-weight:500}
+
+/* hero */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:80px 0 60px}
+.hero .script{margin-bottom:14px}
+.hero h1{font-size:clamp(42px,6.8vw,84px);max-width:17ch;margin:0 auto}
+.hero p.lede{color:var(--mut);font-size:clamp(17px,1.5vw,19px);max-width:56ch;margin:26px auto 38px}
+.badge{display:inline-flex;align-items:center;gap:10px;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);border:1px solid var(--line);border-radius:100px;padding:8px 18px;margin-bottom:26px}
+.badge b{color:var(--gold-hi);font-weight:600}
+
+/* form */
+.wl{display:flex;gap:10px;max-width:520px;margin:0 auto;flex-wrap:wrap;justify-content:center}
+.wl input{flex:1 1 260px;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:100px;color:var(--ivory);font-family:var(--sans);font-size:15px;padding:16px 22px;transition:border-color .3s,box-shadow .3s}
+.wl input:focus{outline:none;border-color:var(--gold-dim);box-shadow:0 0 0 3px var(--gold-glow)}
+.wl input::placeholder{color:var(--mut)}
+.btn{position:relative;overflow:hidden;flex:0 0 auto;background:linear-gradient(rgba(200,169,110,.95),rgba(200,169,110,.8));color:#232324;border:none;border-radius:100px;font-family:var(--sans);font-weight:600;font-size:14px;letter-spacing:.1em;text-transform:uppercase;padding:16px 30px;cursor:pointer;transition:transform .3s var(--ease),box-shadow .3s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 40px -10px rgba(200,169,110,.5)}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.6}
+.note{font-size:12.5px;color:var(--mut);margin-top:14px;letter-spacing:.04em}
+#msg{margin-top:16px;font-family:var(--serif);font-style:italic;font-size:16px;min-height:22px}
+#msg.ok{color:var(--gold-hi)}#msg.err{color:#c96a6a}
+
+/* sections */
+.sec{padding:clamp(80px,13vh,140px) 0;position:relative;z-index:2}
+.sec-head{text-align:center;margin-bottom:clamp(40px,6vh,64px)}
+.sec-head h2{font-size:clamp(32px,4.6vw,54px);max-width:22ch;margin:12px auto 0}
+
+/* pillars */
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.pill{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:20px;padding:34px 28px;transition:transform .45s var(--ease),border-color .45s}
+.pill:hover{transform:translateY(-5px);border-color:var(--gold-dim)}
+.pill .num{font-family:var(--serif);font-style:italic;color:var(--gold);font-size:15px}
+.pill h3{font-family:var(--serif);font-weight:400;font-size:24px;margin:10px 0 8px}
+.pill p{color:var(--mut);font-size:15px}
+@media(max-width:820px){.pillars{grid-template-columns:1fr}}
+
+/* about */
+.about{display:grid;grid-template-columns:.85fr 1.3fr;gap:clamp(36px,5vw,80px);align-items:center}
+.portrait{aspect-ratio:4/5;border:1px solid var(--line);border-radius:22px;background:radial-gradient(80% 90% at 30% 20%,rgba(200,169,110,.14),transparent 60%),rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.portrait span{font-family:var(--serif);font-size:clamp(70px,8vw,110px);color:var(--gold);opacity:.9}
+.portrait::after{content:'PhD · KLINICKÁ PSYCHOLOGIE';position:absolute;bottom:20px;letter-spacing:.3em;font-size:10px;color:var(--mut)}
+.about h2{font-size:clamp(30px,4vw,46px);margin-bottom:18px}
+.about p{color:var(--mut);margin-bottom:14px}
+.about p b{color:var(--ivory);font-weight:500}
+@media(max-width:820px){.about{grid-template-columns:1fr}.portrait{max-width:300px;margin:0 auto}}
+
+/* script quote band */
+.quote{text-align:center;padding:clamp(60px,10vh,110px) 0}
+.quote .script{font-size:clamp(34px,5vw,56px);line-height:1.25;max-width:26ch}
+
+/* final */
+.final{text-align:center;padding-bottom:clamp(90px,14vh,150px)}
+.final h2{font-size:clamp(36px,5.6vw,68px);max-width:18ch;margin:0 auto 16px}
+.final p{color:var(--mut);margin-bottom:34px}
+footer{border-top:1px solid var(--line);padding:28px 0 36px;text-align:center;font-size:12.5px;color:var(--mut);letter-spacing:.08em;position:relative;z-index:2}
+footer b{color:var(--gold);font-weight:500}
+</style>
+</head>
+<body>
+<div class="grain"></div><div class="orb a"></div><div class="orb b"></div>
+
+<header class="hero wrap">
+  <div class="reveal"><span class="script">už žádné přežívání…</span></div>
+  <h1 class="display reveal" style="transition-delay:.08s">Komunita pro ty, kdo chtějí konečně <em>žít, ne přežívat.</em></h1>
+  <p class="lede reveal" style="transition-delay:.16s">Bezpečné místo pod vedením klinické psycholožky, kde se učíme sebevědomí, zdravému nervovému systému a autentické komunikaci. Brzy otevíráme. Počet míst bude omezený.</p>
+  <div class="reveal" style="transition-delay:.22s"><div class="badge">Otevíráme brzy · <b>čekací listina má přednost</b></div></div>
+  <form class="wl reveal" id="wl" style="transition-delay:.28s">
+    <input type="email" id="email" placeholder="Tvůj e-mail" required>
+    <button class="btn" type="submit">Chci být u toho</button>
+  </form>
+  <div id="msg"></div>
+  <p class="note reveal" style="transition-delay:.34s">Žádný spam. Jen zpráva, až se otevřou dveře.</p>
+</header>
+
+<section class="sec wrap">
+  <div class="sec-head reveal">
+    <span class="eyebrow">Co uvnitř najdeš</span>
+    <h2 class="display">Tři věci, které <em>mění všechno</em></h2>
+  </div>
+  <div class="pillars">
+    <div class="pill reveal"><div class="num">01</div><h3>Sebevědomí, které drží</h3><p>Ne afirmace do zrcadla. Skutečná práce s vlastní hodnotou, vedená psycholožkou, krok za krokem.</p></div>
+    <div class="pill reveal" style="transition-delay:.08s"><div class="num">02</div><h3>Klidný nervový systém</h3><p>Pochopíš, proč tělo jede v režimu přežívání, a naučíš se ho vracet do klidu. Věda, ne ezoterika.</p></div>
+    <div class="pill reveal" style="transition-delay:.16s"><div class="num">03</div><h3>Autentická komunikace</h3><p>Říkat, co si myslíš. Nastavit hranice bez viny. Být sama sebou ve vztazích i v práci.</p></div>
+  </div>
+</section>
+
+<section class="sec wrap">
+  <div class="about">
+    <div class="portrait reveal"><span>A</span></div>
+    <div>
+      <span class="eyebrow reveal">Kdo komunitu vede</span>
+      <h2 class="display reveal">Alexandra Schneider Hrouzková, <em>Ph.D.</em></h2>
+      <p class="reveal">Klinická psycholožka, která věří, že změna nezačíná tím, že se opravíš. Začíná tím, že se konečně poznáš.</p>
+      <p class="reveal"><b>Tohle není další online kurz.</b> Je to živé společenství s pravidelným vedením, kde na to nikdo není sám. Odborné zázemí, lidský přístup, žádné rychlé sliby.</p>
+    </div>
+  </div>
+</section>
+
+<div class="quote wrap reveal">
+  <span class="script">„Nebyla jsem vždycky ta, kterou vidíš dnes."</span>
+</div>
+
+<section class="final wrap">
+  <span class="eyebrow reveal">Zbývá jediný krok</span>
+  <h2 class="display reveal">Dveře se otevřou <em>jen jednou.</em></h2>
+  <p class="reveal">Zapiš se na čekací listinu. Kdo je na ní, dozví se všechno první a má místo jisté dřív, než se komunita otevře veřejně.</p>
+  <form class="wl reveal" id="wl2">
+    <input type="email" id="email2" placeholder="Tvůj e-mail" required>
+    <button class="btn" type="submit">Zapsat na listinu</button>
+  </form>
+  <div id="msg2"></div>
+</section>
+
+<footer><div class="wrap">S láskou vedeno <b>Alexandrou</b> · © 2026 · Vytvořeno s <b>JScaling</b></div></footer>
+
+<script>
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+
+const SUPA="https://jezlyszkgyesstczhlbo.supabase.co/rest/v1/waitlist";
+const KEY="sb_publishable_mHXn8xM3D-2hIZ_kWkxzxw_ZLTFw2ls";
+async function join(email,msgEl,btn){
+  msgEl.className="";msgEl.textContent="Zapisuji…";btn.disabled=true;
+  try{
+    const r=await fetch(SUPA,{method:"POST",headers:{apikey:KEY,Authorization:"Bearer "+KEY,"Content-Type":"application/json",Prefer:"return=minimal"},
+      body:JSON.stringify({email:email.trim().toLowerCase(),source:"alexandra-komunita"})});
+    if(!r.ok)throw new Error(await r.text());
+    msgEl.className="ok";msgEl.textContent="Jsi na listině. Ozveme se ti jako první. ✨";
+  }catch(e){
+    msgEl.className="err";msgEl.textContent="Něco se nepovedlo. Zkus to prosím za chvíli.";
+  }
+  btn.disabled=false;
+}
+document.getElementById("wl").addEventListener("submit",e=>{e.preventDefault();join(document.getElementById("email").value,document.getElementById("msg"),e.target.querySelector("button"));});
+document.getElementById("wl2").addEventListener("submit",e=>{e.preventDefault();join(document.getElementById("email2").value,document.getElementById("msg2"),e.target.querySelector("button"));});
+</script>
+</body>
+</html>
