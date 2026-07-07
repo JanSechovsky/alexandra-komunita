@@ -191,7 +191,7 @@ mm.add({motion:"(prefers-reduced-motion: no-preference)",still:"(prefers-reduced
     const heroEls=gsap.utils.toArray(".hero .reveal");
     gsap.set(heroEls,{autoAlpha:1,y:0});
     const scriptSplit=new SplitText(".hero .script",{type:"chars"});
-    const h1Split=new SplitText(".hero h1",{type:"lines,chars",linesClass:"split-line"});
+    const h1Split=new SplitText(".hero h1",{type:"lines,words,chars",linesClass:"split-line"});
     const ledeSplit=new SplitText(".hero .lede",{type:"words"});
     gsap.set(".hero .badge,.hero .wl,.hero .note",{autoAlpha:0,y:18});
     const tl=gsap.timeline({defaults:{ease:"power4.out"}});
