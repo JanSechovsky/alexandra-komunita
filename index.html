@@ -7,7 +7,7 @@
 <meta name="description" content="Komunita pro všechny, kdo se chtějí vymanit z přežívání a začít žít autenticky. Zapiš se na čekací listinu.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Caveat:wght@500;600&display=block" rel="stylesheet">
 <style>
 :root{
   --ink:#232324; --ink2:#2C2C2C; --gold:#C8A96E; --gold-hi:#E2C994; --gold-dim:rgba(200,169,110,.5); --gold-glow:rgba(200,169,110,.16);
@@ -31,6 +31,7 @@ a{color:inherit;text-decoration:none}
 
 .wrap{max-width:1080px;margin:0 auto;padding:0 clamp(20px,4vw,44px);position:relative;z-index:2}
 .reveal{opacity:0}
+.boot .hero{visibility:hidden}
 html.lenis,html.lenis body{height:auto}
 .lenis.lenis-smooth{scroll-behavior:auto!important}
 /* marquee band */
@@ -118,7 +119,8 @@ footer{border-top:1px solid var(--line);padding:28px 0 36px;text-align:center;fo
 footer b{color:var(--gold);font-weight:500}
 </style>
 </head>
-<body>
+<body class="boot">
+<script>setTimeout(function(){document.body.classList.remove('boot')},3500)</script>
 <div class="grain"></div><div id="glow"></div>
 <div class="dots"></div>
 <svg class="rings r1" viewBox="0 0 600 600" fill="none"><g stroke="#C8A96E" stroke-opacity=".07"><circle cx="300" cy="300" r="90"/><circle cx="300" cy="300" r="150"/><circle cx="300" cy="300" r="210"/><circle cx="300" cy="300" r="270"/><ellipse cx="300" cy="300" rx="240" ry="255" transform="rotate(14 300 300)"/></g></svg>
@@ -205,7 +207,7 @@ mm.add({motion:"(prefers-reduced-motion: no-preference)",still:"(prefers-reduced
   gsap.ticker.lagSmoothing(0);
 
   window._lenis=lenis;
-  Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,1200))]).then(()=>{
+  Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,2600))]).then(()=>{
     gsap.set(".reveal",{autoAlpha:0,y:26});
 
     // ── HERO: script write-on → H1 cascade → the rest ──
@@ -215,6 +217,7 @@ mm.add({motion:"(prefers-reduced-motion: no-preference)",still:"(prefers-reduced
     const h1Split=new SplitText(".hero h1",{type:"lines,words,chars",linesClass:"split-line"});
     const ledeSplit=new SplitText(".hero .lede",{type:"words"});
     gsap.set(".hero .badge,.hero .wl,.hero .note",{autoAlpha:0,y:18});
+    document.body.classList.remove("boot");
     const tl=gsap.timeline({defaults:{ease:"power4.out"}});
     tl.from(scriptSplit.chars,{autoAlpha:0,y:16,rotation:-8,stagger:.035,duration:.7,ease:"back.out(1.7)"})
       .from(h1Split.chars,{yPercent:112,stagger:.016,duration:1.15},"-=.15")
