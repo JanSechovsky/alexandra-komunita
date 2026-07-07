@@ -183,7 +183,8 @@ mm.add({motion:"(prefers-reduced-motion: no-preference)",still:"(prefers-reduced
   gsap.ticker.add(t=>lenis.raf(t*1000));
   gsap.ticker.lagSmoothing(0);
 
-  document.fonts.ready.then(()=>{
+  window._lenis=lenis;
+  Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,1200))]).then(()=>{
     gsap.set(".reveal",{autoAlpha:0,y:26});
 
     // ── HERO: script write-on → H1 cascade → the rest ──
