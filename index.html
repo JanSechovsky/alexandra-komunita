@@ -120,7 +120,20 @@ footer b{color:var(--gold);font-weight:500}
 </style>
 </head>
 <body class="boot">
-<script>setTimeout(function(){document.body.classList.remove('boot')},3500)</script>
+<script>
+/* Fail-safe, nothing else. If GSAP or the fonts never arrive we show the page
+   unanimated rather than leaving a blank hero forever. It used to fire blindly
+   at 3500ms, which could lift the shield while the animation was still being
+   set up; it now waits past the 5s font timeout and stands down entirely once
+   the hero has taken over. */
+setTimeout(function(){
+  if (window.__heroReady) return;
+  document.body.classList.remove('boot');
+  document.querySelectorAll('.reveal').forEach(function(e){
+    e.style.opacity = 1; e.style.visibility = 'visible';
+  });
+}, 6500);
+</script>
 <div class="grain"></div><div id="glow"></div>
 <div class="dots"></div>
 <svg class="rings r1" viewBox="0 0 600 600" fill="none"><g stroke="#C8A96E" stroke-opacity=".07"><circle cx="300" cy="300" r="90"/><circle cx="300" cy="300" r="150"/><circle cx="300" cy="300" r="210"/><circle cx="300" cy="300" r="270"/><ellipse cx="300" cy="300" rx="240" ry="255" transform="rotate(14 300 300)"/></g></svg>
@@ -207,7 +220,20 @@ mm.add({motion:"(prefers-reduced-motion: no-preference)",still:"(prefers-reduced
   gsap.ticker.lagSmoothing(0);
 
   window._lenis=lenis;
-  Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,2600))]).then(()=>{
+
+  /* Wait for the ACTUAL faces, not just document.fonts.ready.
+     The stylesheet uses display=block, so on a cold first load the race used to
+     be won by the timeout: SplitText then measured line breaks against the
+     fallback font, the real face swapped in afterwards, and the characters
+     ended up sitting wrong inside .split-line{overflow:hidden}. On a second
+     visit the fonts are cached and it looked fine, which is why this only ever
+     showed up on first load. */
+  const FACES=['400 1em "Instrument Serif"','italic 400 1em "Instrument Serif"',
+               '400 1em "Instrument Sans"','600 1em "Caveat"'];
+  const facesReady=Promise.all(FACES.map(f=>document.fonts.load(f).catch(()=>{})))
+    .then(()=>document.fonts.ready).catch(()=>{});
+
+  Promise.race([facesReady,new Promise(r=>setTimeout(r,5000))]).then(()=>{
     gsap.set(".reveal",{autoAlpha:0,y:26});
 
     // ── HERO: script write-on → H1 cascade → the rest ──
@@ -217,14 +243,23 @@ mm.add({motion:"(prefers-reduced-motion: no-preference)",still:"(prefers-reduced
     const h1Split=new SplitText(".hero h1",{type:"lines,words,chars",linesClass:"split-line"});
     const ledeSplit=new SplitText(".hero .lede",{type:"words"});
     gsap.set(".hero .badge,.hero .wl,.hero .note",{autoAlpha:0,y:18});
-    document.body.classList.remove("boot");
-    const tl=gsap.timeline({defaults:{ease:"power4.out"}});
+
+    /* Build the timeline PAUSED and force frame 0 before lifting the shield.
+       The old order removed .boot first and created the timeline after, so the
+       finished headline was renderable for a moment before anything had been
+       pushed to its start position. Nothing may become visible until it is
+       already standing where the animation begins. */
+    const tl=gsap.timeline({defaults:{ease:"power4.out"},paused:true});
     tl.from(scriptSplit.chars,{autoAlpha:0,y:16,rotation:-8,stagger:.035,duration:.7,ease:"back.out(1.7)"})
       .from(h1Split.chars,{yPercent:112,stagger:.016,duration:1.15},"-=.15")
       .from(ledeSplit.words,{autoAlpha:0,y:14,stagger:.014,duration:.7,ease:"power3.out"},"-=.55")
       .to(".hero .badge",{autoAlpha:1,y:0,duration:.6,ease:"back.out(1.6)"},"-=.35")
       .to(".hero .wl",{autoAlpha:1,y:0,duration:.8},"-=.3")
       .to(".hero .note",{autoAlpha:1,y:0,duration:.6},"-=.5");
+    tl.progress(0);
+    window.__heroReady=true;              // stand the fail-safe down
+    document.body.classList.remove("boot");
+    requestAnimationFrame(()=>tl.play());
 
     // ── scroll reveals (batched, staggered) ──
     const rest=gsap.utils.toArray(".reveal").filter(el=>!el.closest(".hero"));
