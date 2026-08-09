@@ -100,8 +100,14 @@ background:radial-gradient(circle,rgba(200,169,110,.08),transparent 65%);transfo
 /* about */
 .about{display:grid;grid-template-columns:.85fr 1.3fr;gap:clamp(36px,5vw,80px);align-items:center}
 .portrait{aspect-ratio:4/5;border:1px solid var(--line);border-radius:22px;background:radial-gradient(80% 90% at 30% 20%,rgba(200,169,110,.14),transparent 60%),rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.portrait span{font-family:var(--serif);font-size:clamp(70px,8vw,110px);color:var(--gold);opacity:.9}
-.portrait::after{content:'DOKTORKA KLINICKÉ PSYCHOLOGIE';position:absolute;bottom:20px;letter-spacing:.3em;font-size:10px;color:var(--mut)}
+/* The source is landscape (1280x806) and the frame is 4:5, so the crop has to
+   be aimed. She sits at roughly 41% across and 33% down; a centre crop would
+   cut her face. */
+.portrait img{width:100%;height:100%;object-fit:cover;object-position:41% 30%;display:block}
+/* the caption sits over the photo, so it needs its own ground to stay legible */
+.portrait::before{content:'';position:absolute;left:0;right:0;bottom:0;height:34%;
+  background:linear-gradient(to top,rgba(28,28,29,.92),rgba(28,28,29,.45) 45%,transparent);pointer-events:none}
+.portrait::after{content:'DOKTORKA KLINICKÉ PSYCHOLOGIE';position:absolute;bottom:20px;letter-spacing:.3em;font-size:10px;color:var(--ivory);opacity:.85;text-align:center;width:100%;padding:0 12px}
 .about h2{font-size:clamp(30px,4vw,46px);margin-bottom:18px}
 .about p{color:var(--mut);margin-bottom:14px}
 .about p b{color:var(--ivory);font-weight:500}
@@ -173,7 +179,10 @@ setTimeout(function(){
 
 <section class="sec wrap">
   <div class="about">
-    <div class="portrait reveal"><span>A</span></div>
+    <div class="portrait reveal">
+      <img src="alexandra.jpg" width="1280" height="806" loading="lazy" decoding="async"
+           alt="Alexandra Schneider Hrouzková, doktorka klinické psychologie">
+    </div>
     <div>
       <span class="eyebrow reveal">Kdo komunitu vede</span>
       <h2 class="display reveal">Alexandra Schneider Hrouzková, <em>Ph.D.</em></h2>
