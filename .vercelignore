@@ -1,0 +1,5 @@
+# Not part of the site. supabase-waitlist.sql and apps-script.gs are setup
+# notes that live in the repo for reference; they must never be served.
+*.sql
+*.gs
+README*
