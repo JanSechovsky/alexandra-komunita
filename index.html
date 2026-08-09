@@ -280,20 +280,46 @@ mm.add({motion:"(prefers-reduced-motion: no-preference)",still:"(prefers-reduced
 const SUPA="https://jezlyszkgyesstczhlbo.supabase.co/rest/v1/waitlist";
 const KEY="sb_publishable_mHXn8xM3D-2hIZ_kWkxzxw_ZLTFw2ls";
 const SHEET_ENDPOINT=""; // Apps Script /exec URL → live Google Sheet (optional dual-write)
+/* Write to BOTH, and count it captured if either lands.
+   This page was live for a month POSTing to a Supabase table that did not
+   exist. Every signup returned 404, the visitor saw "Něco se nepovedlo", and
+   the lead was gone. One store must never be a single point of failure again,
+   and a failure must be visible in the console instead of swallowed. */
 async function join(form,msgEl){
   const btn=form.querySelector("button");
   const v=f=>form.querySelector(`[data-f="${f}"]`)?.value?.trim()||"";
   const row={name:v("name"),email:v("email").toLowerCase(),
     phone:v("phone")?v("prefix")+" "+v("phone").replace(/\s+/g,""):"",source:"alexandra-komunita"};
+
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(row.email)){
+    msgEl.className="err";msgEl.textContent="Zkontroluj prosím e-mail.";return;
+  }
+
   msgEl.className="";msgEl.textContent="Zapisuji…";btn.disabled=true;
+
+  // no-cors: the reply is opaque, so this counts as captured once it is sent
+  let sheetSent=false;
+  if(SHEET_ENDPOINT){
+    try{ fetch(SHEET_ENDPOINT,{method:"POST",mode:"no-cors",body:new URLSearchParams(row)}); sheetSent=true; }
+    catch(e){ console.error("waitlist sheet:",e); }
+  }
+
+  let ok=false,dup=false;
   try{
     const r=await fetch(SUPA,{method:"POST",headers:{apikey:KEY,Authorization:"Bearer "+KEY,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify(row)});
-    if(!r.ok)throw new Error(await r.text());
-    if(SHEET_ENDPOINT)fetch(SHEET_ENDPOINT,{method:"POST",mode:"no-cors",body:new URLSearchParams(row)}).catch(()=>{});
+    if(r.ok) ok=true;
+    else if(r.status===409) dup=true;                 // unique index on lower(email)
+    else console.error("waitlist supabase:",r.status,await r.text());
+  }catch(e){ console.error("waitlist supabase:",e); }
+
+  if(dup){
+    msgEl.className="ok";msgEl.textContent="Na listině už jsi. Ozveme se ti jako první. ✨";
+    form.reset();
+  }else if(ok||sheetSent){
     msgEl.className="ok";msgEl.textContent="Jsi na listině, "+(row.name.split(" ")[0]||"")+". Ozveme se ti jako první. ✨";
     form.reset();
-  }catch(e){
-    msgEl.className="err";msgEl.textContent="Něco se nepovedlo. Zkus to prosím za chvíli.";
+  }else{
+    msgEl.className="err";msgEl.textContent="Něco se nepovedlo. Napiš nám prosím na Instagramu.";
   }
   btn.disabled=false;
 }
